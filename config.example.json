@@ -1,0 +1,38 @@
+{
+  "sessions": {
+    "personal-fast": {
+      "api_key": "personal",
+      "model": "gemini-2.5-flash",
+      "description": "Personal use, quick answers"
+    },
+    "work-standard": {
+      "api_key": "work",
+      "model": "gemini-2.5-pro",
+      "description": "Work projects, more reliable"
+    },
+    "test-mini": {
+      "api_key": "test",
+      "model": "gemini-2.5-flash-lite",
+      "description": "Experiments with lower costs"
+    }
+  },
+  "models": [
+    "gemini-2.5-flash",
+    "gemini-2.5-pro",
+    "gemini-2.5-flash-lite"
+  ],
+  "api_keys": {
+    "personal": {
+      "description": "Personal account",
+      "key": "your-personal-api-key-here"
+    },
+    "work": {
+      "description": "Work account",
+      "key": "your-work-api-key-here"
+    },
+    "test": {
+      "description": "Testing/experimental key",
+      "key": "your-test-api-key-here"
+    }
+  }
+}
