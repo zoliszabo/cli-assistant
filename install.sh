@@ -21,11 +21,15 @@ if ! command -v jq &> /dev/null; then
 fi
 
 # Create config directory
-echo "📁 Creating config directory: $CONFIG_DIR"
+echo "📁 Creating config directory: $CONFIG_DIR."
 mkdir -p "$CONFIG_DIR"
 
 # Copy the main script
-echo "📋 Copying script files..."
+if [[ -f "$CONFIG_DIR/cli-assistant.sh" ]]; then
+    echo "📋 Updating existing script..."
+else
+    echo "📋 Installing script..."
+fi
 cp "$SCRIPT_DIR/cli-assistant.sh" "$CONFIG_DIR/"
 chmod +x "$CONFIG_DIR/cli-assistant.sh"
 
@@ -33,10 +37,9 @@ chmod +x "$CONFIG_DIR/cli-assistant.sh"
 if [[ ! -f "$CONFIG_DIR/config.json" ]]; then
     echo "⚙️  Creating example configuration..."
     cp "$SCRIPT_DIR/config.example.json" "$CONFIG_DIR/config.json"
-    echo "📝 Please edit $CONFIG_DIR/config.json with your actual API keys"
+    echo "📝 Please edit $CONFIG_DIR/config.json with your actual API keys."
 else
-    echo "⚠️  Configuration file already exists at $CONFIG_DIR/config.json"
-    echo "   Keeping existing configuration."
+    echo "⚠️ Configuration file already exists at $CONFIG_DIR/config.json. Keeping existing configuration."
 fi
 
 # Add to shell configuration
@@ -54,9 +57,9 @@ if [[ -n "$SHELL_CONFIG" ]]; then
         echo "" >> "$SHELL_CONFIG"
         echo "# CLI Assistant" >> "$SHELL_CONFIG"
         echo "source $CONFIG_DIR/cli-assistant.sh" >> "$SHELL_CONFIG"
-        echo "✅ Added to $SHELL_CONFIG"
+        echo "✅ Added to $SHELL_CONFIG."
     else
-        echo "⚠️  Already added to $SHELL_CONFIG"
+        echo "⚠️ Already added to $SHELL_CONFIG."
     fi
 fi
 
@@ -64,9 +67,9 @@ echo ""
 echo "✅ Installation complete!"
 echo ""
 echo "Next steps:"
-echo "1. Edit your configuration: $CONFIG_DIR/config.json"
-echo "2. Add your actual API keys to replace the placeholder values"
-echo "3. Reload your shell: source $SHELL_CONFIG"
-echo "4. Test with: clia \"hello world\""
+echo "1. Edit your configuration: $CONFIG_DIR/config.json."
+echo "2. Add your actual API keys to replace the placeholder values."
+echo "3. Reload your shell: source $SHELL_CONFIG."
+echo "4. Test with: clia \"hello world\"."
 echo ""
-echo "For more information, see README.md"
+echo "For more information, see README.md."

@@ -1,6 +1,6 @@
 # CLI Assistant
 
-A robust wrapper for the `gemini` CLI tool that provides session management, multiple API key support, and friendly configuration.
+A robust wrapper for AI CLI tools that provides session management, multiple API key support, and friendly configuration.
 
 ## Features
 
@@ -29,9 +29,24 @@ Before installing, make sure you have the required dependencies:
    sudo dnf install jq
    ```
 
-2. **gemini CLI tool** - The actual gemini command-line interface must be installed and available in your PATH.
+2. **An AI CLI tool** - One or more actual AI command-line interface tools (such as gemini-cli, openai/codex, claude-code, etc.) must be installed and available in your PATH.
 
 ## Installation
+
+### Get the Code
+
+First, clone or download this repository:
+
+```bash
+# Clone with git
+git clone https://github.com/zoliszabo/cli-assistant.git
+cd cli-assistant
+
+# Or download and extract the ZIP file
+wget https://github.com/zoliszabo/cli-assistant/archive/main.zip
+unzip main.zip
+cd cli-assistant-main
+```
 
 ### Option 1: Automated Installation (Recommended)
 
@@ -64,48 +79,56 @@ This will:
 
 ## Configuration
 
-Create `~/.cli-assistant/config.json` with your API keys and sessions:
+Create `~/.cli-assistant/config.json` with your vendors, API keys and sessions. The tool supports any AI CLI tool - the example below shows configuration for Gemini, but you can configure it for OpenAI, Claude, or any other AI CLI tool by adjusting the vendor settings:
 
 ```json
 {
+  "vendors": {
+    "gemini": {
+      "command": "gemini",
+      "api_keys": {
+        "personal": {
+          "description": "Personal account",
+          "key": "your-personal-api-key-here"
+        },
+        "work": {
+          "description": "Work account",
+          "key": "your-work-api-key-here"
+        }
+      },
+      "models": [
+        "gemini-2.5-flash",
+        "gemini-2.5-pro",
+        "gemini-1.5-flash"
+      ],
+      "env_vars": {
+        "api_key": "GEMINI_API_KEY"
+      },
+      "flags": {
+        "model": "-m",
+        "prompt": "--prompt",
+        "interactive": "--prompt-interactive"
+      }
+    }
+  },
   "sessions": {
     "personal-fast": {
+      "vendor": "gemini",
       "api_key": "personal",
       "model": "gemini-2.5-flash",
       "description": "Personal use, quick answers"
     },
     "work-standard": {
+      "vendor": "gemini",
       "api_key": "work",
-      "model": "gemini-2.5",
+      "model": "gemini-2.5-pro",
       "description": "Work projects, more reliable"
-    },
-    "test-mini": {
-      "api_key": "test",
-      "model": "gemini-1.5-flash",
-      "description": "Experiments with lower costs"
-    }
-  },
-  "models": [
-    "gemini-2.5-flash",
-    "gemini-2.5",
-    "gemini-1.5-flash"
-  ],
-  "api_keys": {
-    "personal": {
-      "description": "Personal account",
-      "key": "your-personal-api-key-here"
-    },
-    "work": {
-      "description": "Work account",
-      "key": "your-work-api-key-here"
-    },
-    "test": {
-      "description": "Testing/experimental key",
-      "key": "your-test-api-key-here"
     }
   }
 }
 ```
+
+**Note**: The configuration supports multiple vendors. You can add other AI CLI tools (like OpenAI, Anthropic, etc.) by adding them to the `vendors` section with their respective commands, environment variables, and flags.
 
 ## Usage
 
@@ -130,7 +153,7 @@ clia -i "explain git concepts"
 cli-assistant --prompt-interactive "explain docker concepts"
 ```
 
-### Pass additional gemini flags
+### Pass additional CLI flags
 ```bash
 clia --debug "complex question"
 clia --sandbox "run some code"
@@ -146,26 +169,29 @@ clia --model --prompt-interactive --debug "detailed analysis"
 ### Session menu example
 ```
 Choose a session:
-1) personal-fast → Personal use, quick answers (gemini-2.5-flash)
-2) work-standard → Work projects, more reliable (gemini-2.5)
-3) test-mini → Experiments with lower costs (gemini-1.5-flash)
+1) personal-fast → Personal use, quick answers (gemini:gemini-2.5-flash)
+2) work-standard → Work projects, more reliable (gemini:gemini-2.5-pro)
+3) test-mini → Experiments with lower costs (gemini:gemini-1.5-flash)
 4) custom
 Selection:
 ```
 
 ### Custom selection (when choosing option 4)
 ```
-Choose API key:
+Choose vendor:
+1) gemini
+Selection: 1
+
+Choose API key for gemini:
 1) personal → Personal account (your-p...here)
 2) work → Work account (your-w...here)
-3) test → Testing/experimental key (your-t...here)
-Selection:
+Selection: 1
 
-Choose model:
+Choose model for gemini:
 1) gemini-2.5-flash
-2) gemini-2.5
+2) gemini-2.5-pro
 3) gemini-1.5-flash
-Selection:
+Selection: 1
 ```
 
 ## Files Created
@@ -180,3 +206,6 @@ Selection:
 - `bash` or `zsh` shell
 - `jq` command-line JSON processor
 - `gemini` CLI tool installed and in PATH
+- Gemini API key(s)
+
+**Note**: The tool supports multiple AI vendors. Additional CLI tools can be configured by extending the `vendors` section in the configuration.
